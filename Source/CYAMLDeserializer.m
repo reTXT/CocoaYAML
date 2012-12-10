@@ -482,7 +482,7 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 		theValue = theString;
 		}
 
-#if 1
+#if 0
 	NSLog(@"%@ %d %@ %@ %@", theTag, theStyle, theString, theValue, NSStringFromClass([theValue class]));
 #endif
 
