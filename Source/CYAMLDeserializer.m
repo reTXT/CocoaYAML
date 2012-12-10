@@ -10,10 +10,20 @@
 
 #include <yaml.h>
 
-static id ValueForScalar(const yaml_event_t *inEvent, NSError **outError);
+typedef enum {
+	Mode_Stream,
+	Mode_Document,
+	Mode_Sequence,
+	Mode_Mapping,
+	} EMode;
+
+static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int depth, EMode mode, id container, NSError **outError);
+static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *inEvent, NSError **outError);
 
 @interface CYAMLDeserializer()
 @property (readwrite, nonatomic, assign) yaml_parser_t *parser;
+@property (readwrite, nonatomic, strong) NSMutableDictionary *objectsForAnchors;
+@property (readwrite, nonatomic, strong) NSMutableDictionary *tagHandlers;
 @end
 
 #pragma mark -
@@ -25,12 +35,73 @@ static id ValueForScalar(const yaml_event_t *inEvent, NSError **outError);
     if ((self = [super init]) != NULL)
         {
         _assumeSingleDocument = YES;
+		_tagHandlers = [NSMutableDictionary dictionary];
+
+		[self registerDefaultHandlers];
         }
     return self;
     }
 
+- (void)registerHandlerForTag:(NSString *)inTag block:(id (^)(NSString *, NSError **))inBlock
+	{
+	self.tagHandlers[inTag] = [inBlock copy];
+	}
+
+- (void)registerDefaultHandlers
+	{
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_NULL_TAG] block:^(NSString *inValue, NSError **outError) {
+		return([NSNull null]);
+		}];
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_BOOL_TAG] block:^(NSString *inValue, NSError **outError) {
+		return(@([inValue boolValue]));
+		}];
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_STR_TAG] block:^(NSString *inValue, NSError **outError) {
+		return(inValue);
+		}];
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_INT_TAG] block:^(NSString *inValue, NSError **outError) {
+		return(@([inValue integerValue]));
+		}];
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_FLOAT_TAG] block:^(NSString *inValue, NSError **outError) {
+		return(@([inValue doubleValue]));
+		}];
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_TIMESTAMP_TAG] block:^(NSString *inValue, NSError **outError) {
+		return([NSDate dateWithTimeIntervalSince1970:[inValue doubleValue]]);
+		}];
+
+	[self registerHandlerForTag:@"tag:yaml.org,2002:binary" block:^(NSString *inValue, NSError **outError) {
+		return(inValue);
+		}];
+
+
+
+
+
+
+
+//
+//
+//
+//
+//#define YAML_NULL_TAG       "tag:yaml.org,2002:null"
+///** The tag @c !!bool with the values: @c true and @c falce. */
+//#define YAML_BOOL_TAG       "tag:yaml.org,2002:bool"
+///** The tag @c !!str for string values. */
+//#define YAML_STR_TAG        "tag:yaml.org,2002:str"
+///** The tag @c !!int for integer values. */
+//#define YAML_INT_TAG        "tag:yaml.org,2002:int"
+///** The tag @c !!float for float values. */
+//#define YAML_FLOAT_TAG      "tag:yaml.org,2002:float"
+///** The tag @c !!timestamp for date and time values. */
+//#define YAML_TIMESTAMP_TAG  "tag:yaml.org,2002:timestamp"
+
+
+
+	}
+
 - (id)deserializeData:(NSData *)inData error:(NSError **)outError
 	{
+	self.objectsForAnchors = [NSMutableDictionary dictionary];
+
 	_parser = malloc(sizeof(*_parser));
 	yaml_parser_initialize(_parser);
 
@@ -68,388 +139,352 @@ static id ValueForScalar(const yaml_event_t *inEvent, NSError **outError);
 
 - (id)deserialize:(NSError *__autoreleasing *)outError
 	{
-	id theRootObject = NULL;
-
-	BOOL theDoneFlag = NO;
-	while (!theDoneFlag)
+	NSError *theError = NULL;
+	NSMutableArray *theDocuments = [NSMutableArray array];
+	EventLoop(self, _parser, 0, Mode_Stream, theDocuments, &theError);
+	if (theError != NULL)
 		{
-		yaml_event_t theEvent;
-
-		/* Get the next event. */
-		if (!yaml_parser_parse(_parser, &theEvent))
+		if (outError != NULL)
 			{
-			if (outError)
-				{
-				*outError = [NSError errorWithDomain:@"TODO" code:-10 userInfo:NULL];
-				}
-			return(NULL);
+			*outError = theError;
 			}
-
-		switch (theEvent.type)
-			{
-			case YAML_STREAM_START_EVENT:
-				break;
-			case YAML_STREAM_END_EVENT:
-				{
-				theDoneFlag = YES;
-				}
-				break;
-			case YAML_DOCUMENT_START_EVENT:
-				{
-				theRootObject = [self processDocuments:outError];
-				if (theRootObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_SCALAR_EVENT:
-				{
-				theRootObject = ValueForScalar(&theEvent, outError);
-				if (theRootObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_SEQUENCE_START_EVENT:
-				{
-				theRootObject = [self processSequence:outError];
-				if (theRootObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_MAPPING_START_EVENT:
-				{
-				theRootObject = [self processMapping:outError];
-				if (theRootObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			default:
-				{
-				if (outError)
-					{
-					*outError = [NSError errorWithDomain:@"TODO" code:-1 userInfo:NULL];
-					}
-				return(NULL);
-				}
-			}
-
-		/* The application is responsible for destroying the event object. */
-		yaml_event_delete(&theEvent);
+		return(NULL);
 		}
-
-	if (self.assumeSingleDocument)
-		{
-		theRootObject = theRootObject[0];
-		}
-
-	return(theRootObject);
+	return(theDocuments);
 	}
-
-- (NSArray *)processDocuments:(NSError **)outError
-	{
-	NSMutableArray *theArray = [NSMutableArray array];
-
-	BOOL theDoneFlag = NO;
-	while (!theDoneFlag)
-		{
-		yaml_event_t theEvent;
-
-		/* Get the next event. */
-		if (!yaml_parser_parse(_parser, &theEvent))
-			{
-			if (outError)
-				{
-				*outError = [NSError errorWithDomain:@"TODO" code:-11 userInfo:NULL];
-				}
-			return(NULL);
-			}
-
-		id theObject = NULL;
-
-		switch (theEvent.type)
-			{
-			case YAML_DOCUMENT_END_EVENT:
-				{
-				theDoneFlag = YES;
-				}
-				break;
-			case YAML_SCALAR_EVENT:
-				theObject = ValueForScalar(&theEvent, outError);
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				break;
-			case YAML_SEQUENCE_START_EVENT:
-				{
-				theObject = [self processSequence:outError];
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_MAPPING_START_EVENT:
-				{
-				theObject = [self processMapping:outError];
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			default:
-				{
-				if (outError)
-					{
-					*outError = [NSError errorWithDomain:@"TODO" code:-2 userInfo:NULL];
-					}
-				return(NULL);
-				}
-			}
-
-		yaml_event_delete(&theEvent);
-
-		if (theObject)
-			{
-			[theArray addObject:theObject];
-			}
-		}
-	return(theArray);
-	}
-
 
 #pragma mark -
 
-- (NSDictionary *)processMapping:(NSError **)outError
+- (NSError *)currentError
 	{
-	NSMutableDictionary *theDictionary = [NSMutableDictionary dictionary];
-
-	id theKey = NULL;
-
-	BOOL theDoneFlag = NO;
-	while (!theDoneFlag)
-		{
-		yaml_event_t theEvent;
-
-		/* Get the next event. */
-		if (!yaml_parser_parse(_parser, &theEvent))
-			{
-			if (outError)
-				{
-				*outError = [NSError errorWithDomain:@"TODO" code:-12 userInfo:NULL];
-				}
-			return(NULL);
-			}
-
-		id theObject = NULL;
-
-		switch (theEvent.type)
-			{
-			case YAML_SCALAR_EVENT:
-				{
-				theObject = ValueForScalar(&theEvent, outError);
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_SEQUENCE_START_EVENT:
-				{
-				theObject = [self processSequence:outError];
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_MAPPING_START_EVENT:
-				{
-				theObject = [self processMapping:outError];
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_MAPPING_END_EVENT:
-				{
-				theDoneFlag = YES;
-				}
-				break;
-			default:
-				{
-				if (outError)
-					{
-					*outError = [NSError errorWithDomain:@"TODO" code:-3 userInfo:NULL];
-					}
-				return(NULL);
-				}
-			}
-
-		yaml_event_delete(&theEvent);
-
-		if (theKey == NULL)
-			{
-			theKey = theObject;
-			}
-		else
-			{
-			theDictionary[theKey] = theObject;
-			theKey = NULL;
-			}
-		}
-	return(theDictionary);
-	}
-
-- (NSArray *)processSequence:(NSError **)outError
-	{
-	NSMutableArray *theArray = [NSMutableArray array];
-
-	BOOL theDoneFlag = NO;
-	while (!theDoneFlag)
-		{
-		yaml_event_t theEvent;
-
-		/* Get the next event. */
-		if (!yaml_parser_parse(_parser, &theEvent))
-			{
-			if (outError)
-				{
-				*outError = [NSError errorWithDomain:@"TODO" code:-13 userInfo:NULL];
-				}
-			return(NULL);
-			}
-
-		id theObject = NULL;
-
-		switch (theEvent.type)
-			{
-			case YAML_SCALAR_EVENT:
-				{
-				theObject = ValueForScalar(&theEvent, outError);
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_SEQUENCE_START_EVENT:
-				{
-				theObject = [self processSequence:outError];
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			case YAML_SEQUENCE_END_EVENT:
-				{
-				theDoneFlag = YES;
-				}
-				break;
-			case YAML_MAPPING_START_EVENT:
-				{
-				theObject = [self processMapping:outError];
-				if (theObject == NULL)
-					{
-					return(NULL);
-					}
-				}
-				break;
-			default:
-				{
-				if (outError)
-					{
-					*outError = [NSError errorWithDomain:@"TODO" code:-4 userInfo:NULL];
-					}
-				return(NULL);
-				}
-				break;
-			}
-
-		yaml_event_delete(&theEvent);
-
-		if (theObject)
-			{
-			[theArray addObject:theObject];
-			}
-		}
-	return(theArray);
+	NSError *theError = [NSError errorWithDomain:@"libyaml" code:_parser->error userInfo:@{
+		NSLocalizedDescriptionKey: [NSString stringWithFormat:@"%s", _parser->problem],
+		@"offset": @(_parser->offset),
+		}];
+	return(theError);
 	}
 
 @end
 
-static id ValueForScalar(const yaml_event_t *inEvent, NSError **outError)
+static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int depth, EMode mode, id container, NSError **outError)
 	{
-	id theValue = NULL;
-	NSString *theString = [[NSString alloc] initWithUTF8String:(const char *)inEvent->data.scalar.value];
-	switch (inEvent->data.scalar.style)
+	id theResult = NULL;
+	id theKey = NULL;
+	NSError *theError = NULL;
+	BOOL theDoneFlag = NO;
+
+	while (theDoneFlag == NO && theError == NULL)
 		{
-		case YAML_PLAIN_SCALAR_STYLE:
+		yaml_event_t theEvent;
+		if (!yaml_parser_parse(parser, &theEvent))
 			{
-			if (inEvent->data.scalar.tag == NULL)
+			theError = [NSError errorWithDomain:@"libyaml" code:parser->error userInfo:@{
+				NSLocalizedDescriptionKey: [NSString stringWithUTF8String:parser->problem],
+				@"offset": @(parser->offset),
+				}];
+
+			if (outError != NULL)
 				{
-				NSDictionary *theConstantTags = @{
-					@"true": [NSNumber numberWithBool:YES],
-					@"false": [NSNumber numberWithBool:NO],
-					@"null": [NSNull null],
-					};
-				theValue = theConstantTags[theString];
-				if (theValue != NULL)
-					{
-					break;
-					}
+				*outError = theError;
+				}
+			return(NULL);
+			}
 
-				// The NSRegularExpression class is currently only available in the Foundation framework of iOS 4
-				NSError *error = NULL;
-				NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^-?\\d+$" options:0 error:&error];
-				NSUInteger numberOfMatches = [regex numberOfMatchesInString:theString options:0 range:NSMakeRange(0, [theString length])];
-				if (numberOfMatches == 1)
-					{
-					theValue = @([theString integerValue]);
-					break;
-					}
+		id theObject = NULL;
+		NSString *theAnchor = NULL;
 
-				// The NSRegularExpression class is currently only available in the Foundation framework of iOS 4
-				regex = [NSRegularExpression regularExpressionWithPattern:@"^(-?[1-9]\\d*(\\.\\d*)?(e[-+]?[1-9][0-9]+)?|0|inf|-inf|nan)$" options:0 error:&error];
-				numberOfMatches = [regex numberOfMatchesInString:theString options:0 range:NSMakeRange(0, [theString length])];
-				if (numberOfMatches == 1)
-					{
-					theValue = @([theString doubleValue]);
-					break;
-					}
+#if 0
+		NSLog(@"% 2d %@ %@ %@ %p", depth,
+			[@[@"stream",@"document",@"sequence",@"mapping"][mode] stringByPaddingToLength:10 withString:@" " startingAtIndex:0],
+			[@[@"no",@"stream_start",@"stream_end",@"doc_start",@"doc_end",@"alias",@"scalar",@"seq_start",@"seq_end",@"map_start",@"map_end"][theEvent.type] stringByPaddingToLength:10 withString:@" " startingAtIndex:0],
+			NSStringFromClass([container class]),
+			container
+			);
+#endif
 
-				theValue = theString;
+		switch (theEvent.type)
+			{
+			case YAML_NO_EVENT: // 0
+				{
+				theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+					NSLocalizedDescriptionKey: @"Received unexpected YAML_NO_EVENT.",
+					@"offset": @(parser->offset),
+					}];
+				}
 				break;
+			case YAML_STREAM_START_EVENT: // 1
+				{
+				if (mode != Mode_Stream)
+					{
+					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+						NSLocalizedDescriptionKey: @"Received unexpected YAML_STREAM_START_EVENT.",
+						@"offset": @(parser->offset),
+						}];
+					}
+				}
+				break;
+			case YAML_STREAM_END_EVENT: // 2
+				{
+				if (mode != Mode_Stream)
+					{
+					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+						NSLocalizedDescriptionKey: @"Received unexpected YAML_STREAM_END_EVENT.",
+						@"offset": @(parser->offset),
+						}];
+					}
+				else
+					{
+					theDoneFlag = YES;
+					}
+				}
+				break;
+			case YAML_DOCUMENT_START_EVENT: // 3
+				{
+				if (mode != Mode_Stream)
+					{
+					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+						NSLocalizedDescriptionKey: @"Received unexpected YAML_DOCUMENT_START_EVENT.",
+						@"offset": @(parser->offset),
+						}];
+					}
+				else
+					{
+					theObject = EventLoop(deserializer, parser, depth+1, Mode_Document, container, &theError);
+					}
+				}
+				break;
+			case YAML_DOCUMENT_END_EVENT: // 4
+				{
+				if (mode != Mode_Document)
+					{
+					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+						NSLocalizedDescriptionKey: @"Received unexpected YAML_DOCUMENT_END_EVENT.",
+						@"offset": @(parser->offset),
+						}];
+					}
+				else
+					{
+					theDoneFlag = YES;
+					}
+				}
+				break;
+			case YAML_ALIAS_EVENT: // 5
+				{
+				NSString *theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.alias.anchor];
+				theObject = deserializer.objectsForAnchors[theAnchor];
+				if (theObject == NULL)
+					{
+					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+						NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Could not find tagged object with anchor %@", theAnchor],
+						@"offset": @(parser->offset),
+						}];
+					}
+				}
+				break;
+			case YAML_SCALAR_EVENT: // 6
+				{
+				theObject = ValueForScalar(deserializer, &theEvent, &theError);
+				if (theEvent.data.scalar.anchor != NULL)
+					{
+					theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.scalar.anchor];
+					}
+				}
+				break;
+			case YAML_SEQUENCE_START_EVENT: // 7
+				{
+				NSMutableArray *theArray = [NSMutableArray array];
+				EventLoop(deserializer, parser, depth + 1, Mode_Sequence, theArray, &theError);
+				theObject = theArray;
+				if (theEvent.data.sequence_start.anchor != NULL)
+					{
+					theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.sequence_start.anchor];
+					}
+				}
+				break;
+			case YAML_SEQUENCE_END_EVENT: // 8
+				{
+				if (mode != Mode_Sequence)
+					{
+					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+						NSLocalizedDescriptionKey: @"Received unexpected YAML_SEQUENCE_END_EVENT.",
+						@"offset": @(parser->offset),
+						}];
+					}
+				else
+					{
+					theDoneFlag = YES;
+					}
+				}
+				break;
+			case YAML_MAPPING_START_EVENT: // 9
+				{
+				NSMutableDictionary *theDictionary = [NSMutableDictionary dictionary];
+				EventLoop(deserializer, parser, depth + 1, Mode_Mapping, theDictionary, &theError);
+				theObject = theDictionary;
+				if (theEvent.data.mapping_start.anchor != NULL)
+					{
+					theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.mapping_start.anchor];
+					}
+				}
+				break;
+			case YAML_MAPPING_END_EVENT: // 10
+				{
+				if (mode != Mode_Mapping)
+					{
+					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+						NSLocalizedDescriptionKey: @"Received unexpected YAML_MAPPING_END_EVENT.",
+						@"offset": @(parser->offset),
+						}];
+					}
+				theDoneFlag = YES;
+				}
+				break;
+			default:
+				{
+				theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
+					NSLocalizedDescriptionKey: @"Received unknown event type.",
+					@"offset": @(parser->offset),
+					}];
+				}
+				break;
+			}
+
+		yaml_event_delete(&theEvent);
+
+		if (theError)
+			{
+			if (outError)
+				{
+				*outError = theError;
+				}
+			return(NULL);
+			}
+
+		if (theObject)
+			{
+			if (theAnchor)
+				{
+				deserializer.objectsForAnchors[theAnchor] = theObject;
+				}
+
+			if (mode == Mode_Sequence || mode == Mode_Stream || mode == Mode_Document)
+				{
+				NSCParameterAssert(container);
+				NSCParameterAssert([container isKindOfClass:[NSMutableArray class]]);
+				[container addObject:theObject];
+				}
+			else if (mode == Mode_Mapping)
+				{
+				NSCParameterAssert(container);
+				NSCParameterAssert([container isKindOfClass:[NSMutableDictionary class]]);
+				if (theKey == NULL)
+					{
+					theKey = theObject;
+					}
+				else
+					{
+					container[theKey] = theObject;
+					theKey = NULL;
+					}
 				}
 			else
 				{
 				NSCParameterAssert(NO);
 				}
 			}
-			break;
-		case YAML_SINGLE_QUOTED_SCALAR_STYLE:
-		case YAML_DOUBLE_QUOTED_SCALAR_STYLE:
-			{
-			theValue = theString;
-			}
-			break;
-		case YAML_ANY_SCALAR_STYLE:
-		case YAML_LITERAL_SCALAR_STYLE:
-		case YAML_FOLDED_SCALAR_STYLE:
-			NSLog(@"########  UNKNOWN STYLE: %d", inEvent->data.scalar.style);
-			NSCParameterAssert(NO);
-			break;
 		}
+
+	return(theResult);
+	}
+
+static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *inEvent, NSError **outError)
+	{
+	id theValue = NULL;
+	NSString *theString = [[NSString alloc] initWithUTF8String:(const char *)inEvent->data.scalar.value];
+	NSString *theTag = NULL;
+	const yaml_scalar_style_t theStyle = inEvent->data.scalar.style;
+
+	if (inEvent->data.scalar.tag != NULL)
+		{
+		theTag = [NSString stringWithUTF8String:(const char *)inEvent->data.scalar.tag];
+		}
+
+	if (theTag == NULL)
+		{
+		if (theStyle == YAML_SINGLE_QUOTED_SCALAR_STYLE || theStyle == YAML_DOUBLE_QUOTED_SCALAR_STYLE || theStyle == YAML_LITERAL_SCALAR_STYLE)
+			{
+			theTag = @YAML_STR_TAG;
+			}
+		}
+
+	if (theTag == NULL)
+		{
+		// The NSRegularExpression class is currently only available in the Foundation framework of iOS 4
+		NSError *error = NULL;
+		NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^-?\\d+$" options:0 error:&error];
+		NSUInteger numberOfMatches = [regex numberOfMatchesInString:theString options:0 range:NSMakeRange(0, [theString length])];
+		if (numberOfMatches == 1)
+			{
+			theTag = @YAML_INT_TAG;
+			}
+		}
+
+	if (theTag == NULL)
+		{
+		// The NSRegularExpression class is currently only available in the Foundation framework of iOS 4
+		NSError *error = NULL;
+		NSRegularExpression *regex = [NSRegularExpression regularExpressionWithPattern:@"^(-?[1-9]\\d*(\\.\\d*)?(e[-+]?[1-9][0-9]+)?|0|inf|-inf|nan)$" options:0 error:&error];
+		NSUInteger numberOfMatches = [regex numberOfMatchesInString:theString options:0 range:NSMakeRange(0, [theString length])];
+		if (numberOfMatches == 1)
+			{
+			theTag = @YAML_FLOAT_TAG;
+			}
+		}
+
+	if (theTag != NULL)
+		{
+		id (^theHandler)(NSString *, NSError **) = deserializer.tagHandlers[theTag];
+		if (theHandler)
+			{
+			theValue = theHandler(theString, outError);
+			}
+		else
+			{
+			if (outError)
+				{
+				*outError = [NSError errorWithDomain:@"TODO" code:-1 userInfo:@{
+					NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Unhandled tag type: %@ (value: %@)", theTag, theString],
+					@"offset": @(deserializer.parser->offset),
+					}];
+				}
+			return(NULL);
+			}
+		}
+
+	if (theValue == NULL)
+		{
+		NSDictionary *theConstantTags = @{
+			@"true": [NSNumber numberWithBool:YES],
+			@"false": [NSNumber numberWithBool:NO],
+			@"yes": [NSNumber numberWithBool:YES],
+			@"no": [NSNumber numberWithBool:NO],
+			@"null": [NSNull null],
+			@".inf": @(INFINITY),
+			@"-.inf": @(-INFINITY),
+			@"+.inf": @(INFINITY),
+			@".nan": @(NAN),
+			};
+		theValue = theConstantTags[[theString lowercaseString]];
+		}
+
+	if (theValue == NULL)
+		{
+		theValue = theString;
+		}
+
+#if 1
+	NSLog(@"%@ %d %@ %@ %@", theTag, theStyle, theString, theValue, NSStringFromClass([theValue class]));
+#endif
 
 	return(theValue);
 	}

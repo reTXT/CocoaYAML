@@ -18,6 +18,9 @@
 		450D7DD616765F1800F4F5C2 /* CYAMLDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */; };
 		4584636F16765E8A00B0C5AC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4584636E16765E8A00B0C5AC /* Foundation.framework */; };
 		4584637216765E8A00B0C5AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4584637116765E8A00B0C5AC /* main.m */; };
+		45F23C03167691CB00A3A6FC /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */; };
+		45F23C04167691CB00A3A6FC /* NSData_Base64Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */; };
+		45F23C05167691CB00A3A6FC /* NSData_DigestExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXCopyFilesBuildPhase section */
@@ -49,6 +52,12 @@
 		4584636E16765E8A00B0C5AC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		4584637116765E8A00B0C5AC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		4584637416765E8A00B0C5AC /* CocoaYAML-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoaYAML-Prefix.pch"; sourceTree = "<group>"; };
+		45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
+		45F23BE5167691CB00A3A6FC /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
+		45F23BE6167691CB00A3A6FC /* NSData_Base64Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSData_Base64Extensions.h; sourceTree = "<group>"; };
+		45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSData_Base64Extensions.m; sourceTree = "<group>"; };
+		45F23BE8167691CB00A3A6FC /* NSData_DigestExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSData_DigestExtensions.h; sourceTree = "<group>"; };
+		45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSData_DigestExtensions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -66,6 +75,7 @@
 		450D7D6A16765F1700F4F5C2 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
+				45F23BE0167691CB00A3A6FC /* SimpleHashAndDigest */,
 				450D7D6B16765F1700F4F5C2 /* libyaml */,
 			);
 			name = Externals;
@@ -159,6 +169,27 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
+		45F23BE0167691CB00A3A6FC /* SimpleHashAndDigest */ = {
+			isa = PBXGroup;
+			children = (
+				45F23BE3167691CB00A3A6FC /* Source */,
+			);
+			path = SimpleHashAndDigest;
+			sourceTree = "<group>";
+		};
+		45F23BE3167691CB00A3A6FC /* Source */ = {
+			isa = PBXGroup;
+			children = (
+				45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */,
+				45F23BE5167691CB00A3A6FC /* Base64Transcoder.h */,
+				45F23BE6167691CB00A3A6FC /* NSData_Base64Extensions.h */,
+				45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */,
+				45F23BE8167691CB00A3A6FC /* NSData_DigestExtensions.h */,
+				45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */,
+			);
+			path = Source;
+			sourceTree = "<group>";
+		};
 /* End PBXGroup section */
 
 /* Begin PBXNativeTarget section */
@@ -220,6 +251,9 @@
 				450D7DC916765F1800F4F5C2 /* scanner.c in Sources */,
 				450D7DCA16765F1800F4F5C2 /* writer.c in Sources */,
 				450D7DD616765F1800F4F5C2 /* CYAMLDeserializer.m in Sources */,
+				45F23C03167691CB00A3A6FC /* Base64Transcoder.c in Sources */,
+				45F23C04167691CB00A3A6FC /* NSData_Base64Extensions.m in Sources */,
+				45F23C05167691CB00A3A6FC /* NSData_DigestExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
