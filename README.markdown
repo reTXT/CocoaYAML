@@ -8,6 +8,19 @@ Don't forget to get the submodules when cloning this project.
 
     git submodule --init --recursive
 
+   [yaml]: http://yaml.org
+   [#4]: https://github.com/schwa/CocoaYAML/issues/4
+   [open source]: https://github.com/schwa/CocoaYAML/blob/master/LICENSE.txt
+   [libyaml]: http://pyyaml.org/wiki/LibYAML
+   [binary]: http://yaml.org/type/binary.html
+   [tag types]: http://yaml.org/type/
+
+## Why? (Why not JSON, plists, etc?)
+
+JSON and plists are good formats but are not exactly user editable (without decent software). Yaml is relatively easy to edit in just a simple text editor. As an added bonus is essentially a pretty simple format to [understand][] and is actually very extensible - which means you can define your own types [see](#how-to-define-your-own-tag-types)
+
+  [understand]: http://en.wikipedia.org/wiki/Yaml
+
 ## How to use
 
 This repository comes with an Xcode project that builds a iOS static library. Include the project and the relevent .h files and then link the static library. I assume you're not an idiot and know how to do that. For idiots I'll consider setting up a [Cocoapods][#7] project.
@@ -16,7 +29,9 @@ This repository comes with an Xcode project that builds a iOS static library. In
 
     CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
     id theObject = [theDeserializer deserializeData:theData error:NULL];
-    
+        
+[#7]: https://github.com/schwa/CocoaYAML/issues/7
+
 ## What about documents?
 
 By default CocoaYAML assumes that your YAML file contains a single logical document. The deserialize methods will return the contents of that document. If you want to access all documents then do the following:
@@ -55,6 +70,8 @@ If it would make you feel better you could call it NILLIFY instead. You already 
 
 [Fine][#9]
 
+   [#9]: https://github.com/schwa/CocoaYAML/issues/9
+   
 ## This NSNull thing is a pet peeve of yours isn't it?
 
 Yes.
@@ -74,11 +91,4 @@ This wouldn't be an Objective-C data deserializer if there weren't at least four
 * http://www.cybergarage.org/twiki/bin/view/Main/YamlForObjC
 * https://github.com/indeyets/syck/tree/master/ext/cocoa/src/
 
-   [yaml]: http://yaml.org
-   [#4]: https://github.com/schwa/CocoaYAML/issues/4
-   [open source]: https://github.com/schwa/CocoaYAML/blob/master/LICENSE.txt
-   [libyaml]: http://pyyaml.org/wiki/LibYAML
-   [binary]: http://yaml.org/type/binary.html
-   [tag types]: http://yaml.org/type/
-   [#7]: https://github.com/schwa/CocoaYAML/issues/8
-   [#9]: https://github.com/schwa/CocoaYAML/issues/9
+   
