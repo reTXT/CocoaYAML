@@ -52,25 +52,13 @@ See [Milestones][]. Immediate goal is to add a lot of unit tests. Then support _
  [#3]: https://github.com/schwa/CocoaYAML/issues/3
  [#4]: https://github.com/schwa/CocoaYAML/issues/4
 
-## What about documents?
+## Types
 
-By default CocoaYAML assumes that your YAML file contains a single logical document. The deserialize methods will return the contents of that document. If you want to access all documents then do the following:
+YAML mappings become instances NSDictionary, while sequences become NSArray. Scalars are either instances of NSString, NSNumber or [NSNull null] as appropriate.
 
-    CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
-    theDeserializer.assumeSingleDocument = NO;
-    ...
+You can use YAML's tag system to extend the type system. By default CocoaYAML has support for converting binary data into NSData instances. (When [complete][#10] timestamps will automatically be converted into NSDate objects). You can [define your own types](#how-to-define-your-own-tag-types) rather easily.
 
-## How to define your own tag types:
-
-You can create your own tag type:
-
-    [theDeserializer registerHandlerForTag:@"!url" block:^(id inValue, NSError **outError) {
-        return([NSURL URLWithString:inValue]);
-        }];
-        
-You can use the '!url' tag to create NSURLs.
-
-    link: !url http://example.com/
+ [#10]: https://github.com/schwa/CocoaYAML/issues/10
 
 ## Oh fuck not more NSNulls?
 
@@ -95,6 +83,28 @@ If it would make you feel better you could call it NILLIFY instead. You already 
 ## This NSNull thing is a pet peeve of yours isn't it?
 
 Yes.
+
+
+## What about documents?
+
+By default CocoaYAML assumes that your YAML file contains a single logical document. The deserialize methods will return the contents of that document. If you want to access all documents then do the following:
+
+    CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
+    theDeserializer.assumeSingleDocument = NO;
+    ...
+
+## How to define your own tag types:
+
+You can create your own tag type:
+
+    [theDeserializer registerHandlerForTag:@"!url" block:^(id inValue, NSError **outError) {
+        return([NSURL URLWithString:inValue]);
+        }];
+        
+You can use the '!url' tag to create NSURLs.
+
+    link: !url http://example.com/
+
 
 ## Yuck whitespace is important in YAML? What is this python?
 
