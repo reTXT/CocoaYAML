@@ -49,7 +49,7 @@ If it would make you feel better you could call it NILLIFY instead. You already 
 
 ## No really I must never see an NSNull in my code because I am a poor programmer and I love to send messages to objects without any idea what their actual type is
 
-    [Fine][#9]
+[Fine][#9]
 
 ## This NSNull thing is a pet peeve of yours isn't it.
 
