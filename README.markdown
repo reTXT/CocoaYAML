@@ -27,8 +27,12 @@ This repository comes with an Xcode project that builds a iOS static library. In
 
     #import "CYAMLDeserializer.h"
 
+    ...
+
     CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
-    id theObject = [theDeserializer deserializeData:theData error:NULL];
+    NSError *theError = NULL;
+    id theObject = [theDeserializer deserializeData:theData error:&theError];
+    // Check for errors if the return value is NULL.
         
 [#7]: https://github.com/schwa/CocoaYAML/issues/7
 
@@ -38,13 +42,13 @@ By default CocoaYAML assumes that your YAML file contains a single logical docum
 
     CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
     theDeserializer.assumeSingleDocument = NO;
-    id theObject = [theDeserializer deserializeData:theData error:NULL];
+    ...
 
 ## How to define your own tag types:
 
 You can create your own tag type:
 
-    [self registerHandlerForTag:@"!url" block:^(id inValue, NSError **outError) {
+    [theDeserializer registerHandlerForTag:@"!url" block:^(id inValue, NSError **outError) {
         return([NSURL URLWithString:inValue]);
         }];
         
