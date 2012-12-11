@@ -17,7 +17,7 @@ This repository comes with an Xcode project that builds a iOS static library. In
     CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
     id theObject = [theDeserializer deserializeData:theData error:NULL];
     
-## But what about documents?
+## What about documents?
 
 By default CocoaYAML assumes that your YAML file contains a single logical document. The deserialize methods will return the contents of that document. If you want to access all documents then do the following:
 
