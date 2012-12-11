@@ -42,60 +42,32 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
     return self;
     }
 
-- (void)registerHandlerForTag:(NSString *)inTag block:(id (^)(NSString *, NSError **))inBlock
+- (void)registerHandlerForTag:(NSString *)inTag block:(id (^)(id, NSError **))inBlock
 	{
 	self.tagHandlers[inTag] = [inBlock copy];
 	}
 
 - (void)registerDefaultHandlers
 	{
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_NULL_TAG] block:^(NSString *inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_NULL_TAG] block:^(id inValue, NSError **outError) {
 		return([NSNull null]);
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_BOOL_TAG] block:^(NSString *inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_BOOL_TAG] block:^(id inValue, NSError **outError) {
 		return(@([inValue boolValue]));
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_STR_TAG] block:^(NSString *inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_STR_TAG] block:^(id inValue, NSError **outError) {
 		return(inValue);
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_INT_TAG] block:^(NSString *inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_INT_TAG] block:^(id inValue, NSError **outError) {
 		return(@([inValue integerValue]));
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_FLOAT_TAG] block:^(NSString *inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_FLOAT_TAG] block:^(id inValue, NSError **outError) {
 		return(@([inValue doubleValue]));
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_TIMESTAMP_TAG] block:^(NSString *inValue, NSError **outError) {
-		return([NSDate dateWithTimeIntervalSince1970:[inValue doubleValue]]);
-		}];
 
-	[self registerHandlerForTag:@"tag:yaml.org,2002:binary" block:^(NSString *inValue, NSError **outError) {
+	[self registerHandlerForTag:@"tag:yaml.org,2002:binary" block:^(id inValue, NSError **outError) {
 		return(inValue);
 		}];
-
-
-
-
-
-
-
-//
-//
-//
-//
-//#define YAML_NULL_TAG       "tag:yaml.org,2002:null"
-///** The tag @c !!bool with the values: @c true and @c falce. */
-//#define YAML_BOOL_TAG       "tag:yaml.org,2002:bool"
-///** The tag @c !!str for string values. */
-//#define YAML_STR_TAG        "tag:yaml.org,2002:str"
-///** The tag @c !!int for integer values. */
-//#define YAML_INT_TAG        "tag:yaml.org,2002:int"
-///** The tag @c !!float for float values. */
-//#define YAML_FLOAT_TAG      "tag:yaml.org,2002:float"
-///** The tag @c !!timestamp for date and time values. */
-//#define YAML_TIMESTAMP_TAG  "tag:yaml.org,2002:timestamp"
-
-
-
 	}
 
 - (id)deserializeData:(NSData *)inData error:(NSError **)outError
@@ -112,7 +84,14 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 	yaml_parser_delete(_parser);
 	free(_parser);
 
-	return(theRootObject);
+	if (self.assumeSingleDocument == YES)
+		{
+		return(theRootObject[0]);
+		}
+	else
+		{
+		return(theRootObject);
+		}
 	}
 
 - (id)deserializeString:(NSString *)inString error:(NSError **)outError;

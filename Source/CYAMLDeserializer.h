@@ -12,6 +12,9 @@
 
 @property (readwrite, nonatomic, assign) BOOL assumeSingleDocument;
 
+- (void)registerHandlerForTag:(NSString *)inTag block:(id (^)(id, NSError **))inBlock;
+- (void)registerDefaultHandlers;
+
 - (id)deserializeData:(NSData *)inData error:(NSError **)outError;
 - (id)deserializeString:(NSString *)inString error:(NSError **)outError;
 - (id)deserializeURL:(NSURL *)inURL error:(NSError **)outError;

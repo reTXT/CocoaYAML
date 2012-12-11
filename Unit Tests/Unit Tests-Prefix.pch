@@ -1,0 +1,9 @@
+//
+// Prefix header for all source files of the 'Unit Tests' target in the 'Unit Tests' project
+//
+
+#ifdef __OBJC__
+	#import <Foundation/Foundation.h>
+#endif
+
+#define HAVE_CONFIG_H 1

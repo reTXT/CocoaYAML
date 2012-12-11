@@ -15,8 +15,14 @@ int main(int argc, const char * argv[])
 	@autoreleasepool
 		{
 		CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
+		[theDeserializer registerHandlerForTag:@"!url" block:^(id inValue, NSError **outError) {
+			return([NSURL URLWithString:inValue]);
+			}];
+
 		NSError *theError = NULL;
-		id theObject = [theDeserializer deserializeURL:[NSURL fileURLWithPath:@"/Users/schwa/Desktop/CocoaYAML/Samples/test1.yaml"] error:&theError];
+		NSURL *theURL = [NSURL fileURLWithPath:@"Samples/test1.yaml"];
+		NSLog(@"%@", theURL);
+		id theObject = [theDeserializer deserializeURL:theURL error:&theError];
 		NSLog(@"Error: %@", theError);
 		NSLog(@"Object: %@", theObject);
 		}
