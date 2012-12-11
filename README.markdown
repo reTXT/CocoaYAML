@@ -51,7 +51,7 @@ If it would make you feel better you could call it NILLIFY instead. You already 
 
 [Fine][#9]
 
-## This NSNull thing is a pet peeve of yours isn't it.
+## This NSNull thing is a pet peeve of yours isn't it?
 
 Yes.
 
