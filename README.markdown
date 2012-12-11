@@ -90,7 +90,7 @@ Yes.
 
 ## Yuck whitespace is important in YAML? What is this python?
 
-Yes, it can make editing a chore. Make sure you have your text editor set to use whitespace for tabs, and use a 2 character tab width. Using the following tagline at the top of your text file might help (does with BBEdit)
+Yes, it can make editing a chore. Make sure you have your text editor set to use whitespace for tabs, and use a 2 character tab width. Using the following modeline at the top of your text file might help (does with BBEdit)
 
     # -*- tab-width: 2; indent-tabs-mode: nil; coding: utf-8; mode: yaml; -*-
 
