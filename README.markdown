@@ -16,6 +16,14 @@ This repository comes with an Xcode project that builds a iOS static library. In
 
     CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
     id theObject = [theDeserializer deserializeData:theData error:NULL];
+    
+## But what about documents?
+
+By default CocoaYAML assumes that your YAML file contains a single logical document. The deserialize methods will return the contents of that document. If you want to access all documents then do the following:
+
+    CYAMLDeserializer *theDeserializer = [[CYAMLDeserializer alloc] init];
+    theDeserializer.assumeSingleDocument = NO;
+    id theObject = [theDeserializer deserializeData:theData error:NULL];
 
 ## How to define your own tag types:
 
@@ -27,7 +35,11 @@ You can create your own tag type:
 
 ## Oh fuck not more NSNulls?
 
-Yes. Get over it. If you don't want NSNull in your code don't expose them in your data.
+Yes. Get over it. If you don't want to handle NSNull objects in your code you need to make sure your data doesn't contain yaml null objects.
+
+## Can't you just make them go away? I'm delicate!
+
+If I remove NSNull objects then the Objective-C representation won't totally match the YAML representation. Going from YAML -> Objective-C -> YAML would be a lossy operation.
 
 A simple macro like the following should make it easy to deal with:
 
@@ -38,6 +50,16 @@ If it would make you feel better you could call it NILLIFY instead. You already 
 ## No really I must never see an NSNull in my code because I am a poor programmer and I love to send messages to objects without any idea what their actual type is
 
     [Fine][#9]
+
+## This NSNull thing is a pet peeve of yours isn't it.
+
+Yes.
+
+## Yuck whitespace is important in YAML? What is this python?
+
+Yes, it can make editing a chore. Make sure you have your text editor set to use whitespace for tabs, and use a 2 character tab width. Using the following tagline at the top of your text file might help (does with BBEdit)
+
+    # tab-width: 2; indent-tabs-mode: nil
 
 ## Other Objective-C YAML projects
 
