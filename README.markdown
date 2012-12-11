@@ -17,9 +17,17 @@ Don't forget to get the submodules when cloning this project.
 
 ## Why? (Why not JSON, plists, etc?)
 
-JSON and plists are good formats but are not exactly user editable (without decent software). Yaml is relatively easy to edit in just a simple text editor. As an added bonus is essentially a pretty simple format to [understand][] and is actually very extensible - which means you can define your own types [see](#how-to-define-your-own-tag-types)
+I want a data format that is relatively human readible and editable without special tools.
+
+JSON and plists are good formats but are only really human readible and editable for the smallest of data sets. In contrast Yaml is relatively easy to edit in just a simple text editor. As an added bonus is essentially a pretty simple format to [understand][] and is actually very extensible - which means you can define your own types [see](#how-to-define-your-own-tag-types)
+
+Previously I've been using a conversion tool (my [transmogrifier][]) tool to convert from YAML to plists at compile time but for various reasons I now need to read yaml directly at runtime
+
+I looked at other Objective-C YAML libraries ([see](#other-objective-c-yaml-projects)) but none really [served my needs][NIH].
 
   [understand]: http://en.wikipedia.org/wiki/Yaml
+  [transmogrifier]: https://github.com/schwa/transmogrifier
+  [NIH]: http://en.wikipedia.org/wiki/Not_invented_here
 
 ## How to use
 
