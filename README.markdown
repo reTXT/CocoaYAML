@@ -8,12 +8,12 @@ Don't forget to get the submodules when cloning this project.
 
     git submodule --init --recursive
 
-   [yaml]: http://yaml.org
-   [#4]: https://github.com/schwa/CocoaYAML/issues/4
-   [open source]: https://github.com/schwa/CocoaYAML/blob/master/LICENSE.txt
-   [libyaml]: http://pyyaml.org/wiki/LibYAML
-   [binary]: http://yaml.org/type/binary.html
-   [tag types]: http://yaml.org/type/
+ [yaml]: http://yaml.org
+ [#4]: https://github.com/schwa/CocoaYAML/issues/4
+ [open source]: https://github.com/schwa/CocoaYAML/blob/master/LICENSE.txt
+ [libyaml]: http://pyyaml.org/wiki/LibYAML
+ [binary]: http://yaml.org/type/binary.html
+ [tag types]: http://yaml.org/type/
 
 ## Why? (Why not JSON, plists, etc?)
 
@@ -25,9 +25,9 @@ Previously I've been using a conversion tool (my [transmogrifier][]) tool to con
 
 I looked at other Objective-C YAML libraries ([see](#other-objective-c-yaml-projects)) but none really [served my needs][NIH].
 
-  [understand]: http://en.wikipedia.org/wiki/Yaml
-  [transmogrifier]: https://github.com/schwa/transmogrifier
-  [NIH]: http://en.wikipedia.org/wiki/Not_invented_here
+ [understand]: http://en.wikipedia.org/wiki/Yaml
+ [transmogrifier]: https://github.com/schwa/transmogrifier
+ [NIH]: http://en.wikipedia.org/wiki/Not_invented_here
 
 ## How to use
 
@@ -42,7 +42,15 @@ This repository comes with an Xcode project that builds a iOS static library. In
     id theObject = [theDeserializer deserializeData:theData error:&theError];
     // Check for errors if the return value is NULL.
         
-[#7]: https://github.com/schwa/CocoaYAML/issues/7
+ [#7]: https://github.com/schwa/CocoaYAML/issues/7
+
+## How complete is it?
+
+See [Milestones][]. Immediate goal is to add a lot of unit tests. Then support _all_ the formats of the [scalar types][#3]. Then possibly add tag support for the non-scalar types. After that the obvious feature is [serialization][#4].
+
+ [Milestones]: https://github.com/schwa/CocoaYAML/issues?milestone=1&state=open
+ [#3]: https://github.com/schwa/CocoaYAML/issues/3
+ [#4]: https://github.com/schwa/CocoaYAML/issues/4
 
 ## What about documents?
 
@@ -82,7 +90,7 @@ If it would make you feel better you could call it NILLIFY instead. You already 
 
 [Fine][#9]
 
-   [#9]: https://github.com/schwa/CocoaYAML/issues/9
+ [#9]: https://github.com/schwa/CocoaYAML/issues/9
    
 ## This NSNull thing is a pet peeve of yours isn't it?
 
