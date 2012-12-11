@@ -29,9 +29,13 @@ By default CocoaYAML assumes that your YAML file contains a single logical docum
 
 You can create your own tag type:
 
-    [self registerHandlerForTag:@"url" block:^(id inValue, NSError **outError) {
-        return([NSURL urlWithString:inValue]);
+    [self registerHandlerForTag:@"!url" block:^(id inValue, NSError **outError) {
+        return([NSURL URLWithString:inValue]);
         }];
+        
+You can use the '!url' tag to create NSURLs.
+
+    link: !url http://example.com/
 
 ## Oh fuck not more NSNulls?
 
