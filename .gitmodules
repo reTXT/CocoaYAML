@@ -1,6 +1,6 @@
 [submodule "Externals/libyaml"]
 	path = Externals/libyaml
-	url = git@github.com:schwa/libyaml.git
+	url = git://github.com/schwa/libyaml.git
 [submodule "Externals/SimpleHashAndDigest"]
 	path = Externals/SimpleHashAndDigest
-	url = git@github.com:schwa/SimpleHashAndDigest.git
+	url = git://github.com/schwa/SimpleHashAndDigest.git
