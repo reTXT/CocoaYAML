@@ -40,6 +40,7 @@
 /* End PBXCopyFilesBuildPhase section */
 
 /* Begin PBXFileReference section */
+		4500CED21685323800E7B6A5 /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 		45010A0F16769B9100ECAAB8 /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
 		45010A1016769B9100ECAAB8 /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
 		45010A1116769B9100ECAAB8 /* NSData_Base64Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSData_Base64Extensions.h; sourceTree = "<group>"; };
@@ -68,7 +69,6 @@
 		45F23B80167662BB00A3A6FC /* yaml_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = yaml_private.h; sourceTree = "<group>"; };
 		45F23BC2167662BB00A3A6FC /* CYAMLDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CYAMLDeserializer.h; sourceTree = "<group>"; };
 		45F23BC3167662BB00A3A6FC /* CYAMLDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CYAMLDeserializer.m; sourceTree = "<group>"; };
-		45F23BDB1676641200A3A6FC /* Prefix.pch */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Prefix.pch; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -93,6 +93,14 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		4500CED11685323800E7B6A5 /* Supporting */ = {
+			isa = PBXGroup;
+			children = (
+				4500CED21685323800E7B6A5 /* Prefix.pch */,
+			);
+			path = Supporting;
+			sourceTree = "<group>";
+		};
 		45010A0B16769B9100ECAAB8 /* SimpleHashAndDigest */ = {
 			isa = PBXGroup;
 			children = (
@@ -139,8 +147,8 @@
 			children = (
 				45F23B69167662BB00A3A6FC /* Externals */,
 				45F23BC1167662BB00A3A6FC /* Source */,
-				45F23BD91676634500A3A6FC /* Supporting Files */,
 				45C2ED2C1677020B005808D3 /* Unit Tests */,
+				4500CED11685323800E7B6A5 /* Supporting */,
 				45F23B571676621E00A3A6FC /* Frameworks */,
 				45F23B561676621E00A3A6FC /* Products */,
 			);
@@ -214,14 +222,6 @@
 				45F23BC3167662BB00A3A6FC /* CYAMLDeserializer.m */,
 			);
 			path = Source;
-			sourceTree = "<group>";
-		};
-		45F23BD91676634500A3A6FC /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				45F23BDB1676641200A3A6FC /* Prefix.pch */,
-			);
-			path = "Supporting Files";
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -440,7 +440,7 @@
 			buildSettings = {
 				DSTROOT = /tmp/CocoaYAML.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Supporting Files/Prefix.pch";
+				GCC_PREFIX_HEADER = Supporting/Prefix.pch;
 				HEADER_SEARCH_PATHS = (
 					Externals/libyaml/include,
 					Externals/libyaml_config,
@@ -456,7 +456,7 @@
 			buildSettings = {
 				DSTROOT = /tmp/CocoaYAML.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "Supporting Files/Prefix.pch";
+				GCC_PREFIX_HEADER = Supporting/Prefix.pch;
 				HEADER_SEARCH_PATHS = (
 					Externals/libyaml/include,
 					Externals/libyaml_config,

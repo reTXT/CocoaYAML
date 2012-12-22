@@ -17,8 +17,7 @@
 		450D7DCA16765F1800F4F5C2 /* writer.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D8016765F1700F4F5C2 /* writer.c */; };
 		450D7DD616765F1800F4F5C2 /* CYAMLDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */; };
 		4584636F16765E8A00B0C5AC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4584636E16765E8A00B0C5AC /* Foundation.framework */; };
-		4584637216765E8A00B0C5AC /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 4584637116765E8A00B0C5AC /* main.m */; };
-		45ACA66C1676F93B0012C289 /* Samples in CopyFiles */ = {isa = PBXBuildFile; fileRef = 45ACA66B1676F8E00012C289 /* Samples */; };
+		459F671C16852FC2006DD219 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 459F671B16852FC2006DD219 /* main.m */; };
 		45C2ED4816770248005808D3 /* SenTestingKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C2ED4716770248005808D3 /* SenTestingKit.framework */; };
 		45C2ED4A16770248005808D3 /* Cocoa.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 45C2ED4916770248005808D3 /* Cocoa.framework */; };
 		45C2ED5416770248005808D3 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 45C2ED5216770248005808D3 /* InfoPlist.strings */; };
@@ -44,7 +43,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
-				45ACA66C1676F93B0012C289 /* Samples in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -65,9 +63,7 @@
 		450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CYAMLDeserializer.m; sourceTree = "<group>"; };
 		4584636A16765E8A00B0C5AC /* CocoaYAML */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; path = CocoaYAML; sourceTree = BUILT_PRODUCTS_DIR; };
 		4584636E16765E8A00B0C5AC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
-		4584637116765E8A00B0C5AC /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
-		4584637416765E8A00B0C5AC /* CocoaYAML-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "CocoaYAML-Prefix.pch"; sourceTree = "<group>"; };
-		45ACA66B1676F8E00012C289 /* Samples */ = {isa = PBXFileReference; lastKnownFileType = folder; name = Samples; path = ../Samples; sourceTree = "<group>"; };
+		459F671B16852FC2006DD219 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
 		45C2ED4616770248005808D3 /* Unit Tests.octest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = "Unit Tests.octest"; sourceTree = BUILT_PRODUCTS_DIR; };
 		45C2ED4716770248005808D3 /* SenTestingKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SenTestingKit.framework; path = Library/Frameworks/SenTestingKit.framework; sourceTree = DEVELOPER_DIR; };
 		45C2ED4916770248005808D3 /* Cocoa.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Cocoa.framework; path = Library/Frameworks/Cocoa.framework; sourceTree = DEVELOPER_DIR; };
@@ -114,8 +110,7 @@
 				45F23BE0167691CB00A3A6FC /* SimpleHashAndDigest */,
 				450D7D6B16765F1700F4F5C2 /* libyaml */,
 			);
-			name = Externals;
-			path = ../Externals;
+			path = Externals;
 			sourceTree = "<group>";
 		};
 		450D7D6B16765F1700F4F5C2 /* libyaml */ = {
@@ -157,15 +152,13 @@
 				450D7DC116765F1800F4F5C2 /* CYAMLDeserializer.h */,
 				450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */,
 			);
-			name = Source;
-			path = ../Source;
+			path = Source;
 			sourceTree = "<group>";
 		};
 		4584635F16765E8A00B0C5AC = {
 			isa = PBXGroup;
 			children = (
-				4584637016765E8A00B0C5AC /* CocoaYAML */,
-				45ACA66B1676F8E00012C289 /* Samples */,
+				459F671816852FC2006DD219 /* CommandLineTest */,
 				450D7D6A16765F1700F4F5C2 /* Externals */,
 				450D7DC016765F1800F4F5C2 /* Source */,
 				45C2ED4F16770248005808D3 /* Unit Tests */,
@@ -194,21 +187,12 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		4584637016765E8A00B0C5AC /* CocoaYAML */ = {
+		459F671816852FC2006DD219 /* CommandLineTest */ = {
 			isa = PBXGroup;
 			children = (
-				4584637116765E8A00B0C5AC /* main.m */,
-				4584637316765E8A00B0C5AC /* Supporting Files */,
+				459F671B16852FC2006DD219 /* main.m */,
 			);
-			path = CocoaYAML;
-			sourceTree = "<group>";
-		};
-		4584637316765E8A00B0C5AC /* Supporting Files */ = {
-			isa = PBXGroup;
-			children = (
-				4584637416765E8A00B0C5AC /* CocoaYAML-Prefix.pch */,
-			);
-			name = "Supporting Files";
+			path = CommandLineTest;
 			sourceTree = "<group>";
 		};
 		45C2ED4B16770248005808D3 /* Other Frameworks */ = {
@@ -228,8 +212,7 @@
 				45C2ED5616770248005808D3 /* Unit_Tests.m */,
 				45C2ED5016770248005808D3 /* Supporting Files */,
 			);
-			name = "Unit Tests";
-			path = "../Unit Tests";
+			path = "Unit Tests";
 			sourceTree = "<group>";
 		};
 		45C2ED5016770248005808D3 /* Supporting Files */ = {
@@ -310,7 +293,7 @@
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = toxicsoftware;
 			};
-			buildConfigurationList = 4584636416765E8A00B0C5AC /* Build configuration list for PBXProject "CocoaYAML" */;
+			buildConfigurationList = 4584636416765E8A00B0C5AC /* Build configuration list for PBXProject "CocoaYAML_OSX" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -360,7 +343,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4584637216765E8A00B0C5AC /* main.m in Sources */,
 				450D7DC316765F1800F4F5C2 /* api.c in Sources */,
 				450D7DC416765F1800F4F5C2 /* dumper.c in Sources */,
 				450D7DC516765F1800F4F5C2 /* emitter.c in Sources */,
@@ -373,6 +355,7 @@
 				45F23C03167691CB00A3A6FC /* Base64Transcoder.c in Sources */,
 				45F23C04167691CB00A3A6FC /* NSData_Base64Extensions.m in Sources */,
 				45F23C05167691CB00A3A6FC /* NSData_DigestExtensions.m in Sources */,
+				459F671C16852FC2006DD219 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -466,10 +449,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "CocoaYAML/CocoaYAML-Prefix.pch";
+				GCC_PREFIX_HEADER = Supporting/Prefix.pch;
 				HEADER_SEARCH_PATHS = (
-					../Externals/libyaml/include,
-					../Externals/libyaml_config,
+					Externals/libyaml/include,
+					Externals/libyaml_config,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -479,10 +462,10 @@
 			isa = XCBuildConfiguration;
 			buildSettings = {
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
-				GCC_PREFIX_HEADER = "CocoaYAML/CocoaYAML-Prefix.pch";
+				GCC_PREFIX_HEADER = Supporting/Prefix.pch;
 				HEADER_SEARCH_PATHS = (
-					../Externals/libyaml/include,
-					../Externals/libyaml_config,
+					Externals/libyaml/include,
+					Externals/libyaml_config,
 				);
 				PRODUCT_NAME = "$(TARGET_NAME)";
 			};
@@ -525,7 +508,7 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
-		4584636416765E8A00B0C5AC /* Build configuration list for PBXProject "CocoaYAML" */ = {
+		4584636416765E8A00B0C5AC /* Build configuration list for PBXProject "CocoaYAML_OSX" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				4584637716765E8A00B0C5AC /* Debug */,
@@ -550,6 +533,7 @@
 				45C2ED5A16770248005808D3 /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
 		};
 /* End XCConfigurationList section */
 	};
