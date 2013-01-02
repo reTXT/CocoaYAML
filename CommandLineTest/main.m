@@ -20,11 +20,12 @@ int main(int argc, const char * argv[])
 			}];
 
 		NSError *theError = NULL;
-		NSURL *theURL = [NSURL fileURLWithPath:@"Samples/test1.yaml"];
+		NSURL *theURL = [NSURL fileURLWithPath:@"Samples/test2.yaml"];
 		NSLog(@"%@", theURL);
 		id theObject = [theDeserializer deserializeURL:theURL error:&theError];
 		NSLog(@"Error: %@", theError);
 		NSLog(@"Object: %@", theObject);
+		NSLog(@"Object: %@", NSStringFromClass([theObject class]));
 		}
     return 0;
 	}

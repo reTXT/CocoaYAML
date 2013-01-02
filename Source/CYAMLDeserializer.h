@@ -19,4 +19,10 @@
 - (id)deserializeString:(NSString *)inString error:(NSError **)outError;
 - (id)deserializeURL:(NSURL *)inURL error:(NSError **)outError;
 
+// Hooks for subclasses to control which classes are used for mapping and sequences.
+- (id)makeMappingObject;
+- (id)finalizeMappingObject:(id)inObject;
+- (id)makeSequenceObject;
+- (id)finalizeSequenceObject:(id)inObject;
+
 @end

@@ -17,7 +17,7 @@ typedef enum {
 	Mode_Mapping,
 	} EMode;
 
-static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int depth, EMode mode, id container, NSError **outError);
+static id EventLoop(CYAMLDeserializer *inDeserializer, yaml_parser_t *inParser, int depth, EMode mode, id container, NSError **outError);
 static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *inEvent, NSError **outError);
 
 @interface CYAMLDeserializer()
@@ -134,6 +134,29 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 
 #pragma mark -
 
+- (id)makeMappingObject
+	{
+	return([NSMutableDictionary dictionary]);
+	}
+
+- (id)finalizeMappingObject:(id)inObject
+	{
+	return([inObject copy]);
+	}
+
+- (id)makeSequenceObject
+	{
+	return([NSMutableArray array]);
+	}
+
+- (id)finalizeSequenceObject:(id)inObject
+	{
+	return([inObject copy]);
+	}
+
+
+#pragma mark -
+
 - (NSError *)currentError
 	{
 	NSError *theError = [NSError errorWithDomain:@"libyaml" code:_parser->error userInfo:@{
@@ -145,7 +168,7 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 
 @end
 
-static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int depth, EMode mode, id container, NSError **outError)
+static id EventLoop(CYAMLDeserializer *inDeserializer, yaml_parser_t *inParser, int depth, EMode mode, id container, NSError **outError)
 	{
 	id theResult = NULL;
 	id theKey = NULL;
@@ -155,11 +178,11 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 	while (theDoneFlag == NO && theError == NULL)
 		{
 		yaml_event_t theEvent;
-		if (!yaml_parser_parse(parser, &theEvent))
+		if (!yaml_parser_parse(inParser, &theEvent))
 			{
-			theError = [NSError errorWithDomain:@"libyaml" code:parser->error userInfo:@{
-				NSLocalizedDescriptionKey: [NSString stringWithUTF8String:parser->problem],
-				@"offset": @(parser->offset),
+			theError = [NSError errorWithDomain:@"libyaml" code:inParser->error userInfo:@{
+				NSLocalizedDescriptionKey: [NSString stringWithUTF8String:inParser->problem],
+				@"offset": @(inParser->offset),
 				}];
 
 			if (outError != NULL)
@@ -187,7 +210,7 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 				{
 				theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 					NSLocalizedDescriptionKey: @"Received unexpected YAML_NO_EVENT.",
-					@"offset": @(parser->offset),
+					@"offset": @(inParser->offset),
 					}];
 				}
 				break;
@@ -197,7 +220,7 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 					{
 					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 						NSLocalizedDescriptionKey: @"Received unexpected YAML_STREAM_START_EVENT.",
-						@"offset": @(parser->offset),
+						@"offset": @(inParser->offset),
 						}];
 					}
 				}
@@ -208,7 +231,7 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 					{
 					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 						NSLocalizedDescriptionKey: @"Received unexpected YAML_STREAM_END_EVENT.",
-						@"offset": @(parser->offset),
+						@"offset": @(inParser->offset),
 						}];
 					}
 				else
@@ -223,12 +246,12 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 					{
 					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 						NSLocalizedDescriptionKey: @"Received unexpected YAML_DOCUMENT_START_EVENT.",
-						@"offset": @(parser->offset),
+						@"offset": @(inParser->offset),
 						}];
 					}
 				else
 					{
-					theObject = EventLoop(deserializer, parser, depth+1, Mode_Document, container, &theError);
+					theObject = EventLoop(inDeserializer, inParser, depth+1, Mode_Document, container, &theError);
 					}
 				}
 				break;
@@ -238,7 +261,7 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 					{
 					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 						NSLocalizedDescriptionKey: @"Received unexpected YAML_DOCUMENT_END_EVENT.",
-						@"offset": @(parser->offset),
+						@"offset": @(inParser->offset),
 						}];
 					}
 				else
@@ -250,19 +273,19 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 			case YAML_ALIAS_EVENT: // 5
 				{
 				NSString *theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.alias.anchor];
-				theObject = deserializer.objectsForAnchors[theAnchor];
+				theObject = inDeserializer.objectsForAnchors[theAnchor];
 				if (theObject == NULL)
 					{
 					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 						NSLocalizedDescriptionKey: [NSString stringWithFormat:@"Could not find tagged object with anchor %@", theAnchor],
-						@"offset": @(parser->offset),
+						@"offset": @(inParser->offset),
 						}];
 					}
 				}
 				break;
 			case YAML_SCALAR_EVENT: // 6
 				{
-				theObject = ValueForScalar(deserializer, &theEvent, &theError);
+				theObject = ValueForScalar(inDeserializer, &theEvent, &theError);
 				if (theEvent.data.scalar.anchor != NULL)
 					{
 					theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.scalar.anchor];
@@ -271,9 +294,9 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 				break;
 			case YAML_SEQUENCE_START_EVENT: // 7
 				{
-				NSMutableArray *theArray = [NSMutableArray array];
-				EventLoop(deserializer, parser, depth + 1, Mode_Sequence, theArray, &theError);
-				theObject = theArray;
+				NSMutableArray *theArray = [inDeserializer makeSequenceObject];
+				EventLoop(inDeserializer, inParser, depth + 1, Mode_Sequence, theArray, &theError);
+				theObject = [inDeserializer finalizeSequenceObject:theArray];
 				if (theEvent.data.sequence_start.anchor != NULL)
 					{
 					theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.sequence_start.anchor];
@@ -286,7 +309,7 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 					{
 					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 						NSLocalizedDescriptionKey: @"Received unexpected YAML_SEQUENCE_END_EVENT.",
-						@"offset": @(parser->offset),
+						@"offset": @(inParser->offset),
 						}];
 					}
 				else
@@ -297,9 +320,9 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 				break;
 			case YAML_MAPPING_START_EVENT: // 9
 				{
-				NSMutableDictionary *theDictionary = [NSMutableDictionary dictionary];
-				EventLoop(deserializer, parser, depth + 1, Mode_Mapping, theDictionary, &theError);
-				theObject = theDictionary;
+				NSMutableDictionary *theDictionary = [inDeserializer makeMappingObject];
+				EventLoop(inDeserializer, inParser, depth + 1, Mode_Mapping, theDictionary, &theError);
+				theObject = [inDeserializer finalizeMappingObject:theDictionary];
 				if (theEvent.data.mapping_start.anchor != NULL)
 					{
 					theAnchor = [NSString stringWithUTF8String:(const char *)theEvent.data.mapping_start.anchor];
@@ -312,9 +335,10 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 					{
 					theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 						NSLocalizedDescriptionKey: @"Received unexpected YAML_MAPPING_END_EVENT.",
-						@"offset": @(parser->offset),
+						@"offset": @(inParser->offset),
 						}];
 					}
+				
 				theDoneFlag = YES;
 				}
 				break;
@@ -322,7 +346,7 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 				{
 				theError = [NSError errorWithDomain:@"CocoaYAML" code:-1 userInfo:@{
 					NSLocalizedDescriptionKey: @"Received unknown event type.",
-					@"offset": @(parser->offset),
+					@"offset": @(inParser->offset),
 					}];
 				}
 				break;
@@ -343,7 +367,7 @@ static id EventLoop(CYAMLDeserializer *deserializer, yaml_parser_t *parser, int 
 			{
 			if (theAnchor)
 				{
-				deserializer.objectsForAnchors[theAnchor] = theObject;
+				inDeserializer.objectsForAnchors[theAnchor] = theObject;
 				}
 
 			if (mode == Mode_Sequence || mode == Mode_Stream || mode == Mode_Document)

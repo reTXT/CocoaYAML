@@ -33,6 +33,8 @@
 		450D7DC916765F1800F4F5C2 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7F16765F1700F4F5C2 /* scanner.c */; };
 		450D7DCA16765F1800F4F5C2 /* writer.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D8016765F1700F4F5C2 /* writer.c */; };
 		450D7DD616765F1800F4F5C2 /* CYAMLDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */; };
+		452B9ED31693F672001A6194 /* Samples in Resources */ = {isa = PBXBuildFile; fileRef = 452B9ED21693F671001A6194 /* Samples */; };
+		452B9ED41693F67E001A6194 /* Samples in CopyFiles */ = {isa = PBXBuildFile; fileRef = 452B9ED21693F671001A6194 /* Samples */; };
 		4584636F16765E8A00B0C5AC /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 4584636E16765E8A00B0C5AC /* Foundation.framework */; };
 		459F671C16852FC2006DD219 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 459F671B16852FC2006DD219 /* main.m */; };
 		45B62A0216853415005AC07B /* CYAMLDeserializer.h in Headers */ = {isa = PBXBuildFile; fileRef = 450D7DC116765F1800F4F5C2 /* CYAMLDeserializer.h */; settings = {ATTRIBUTES = (Public, ); }; };
@@ -62,6 +64,7 @@
 			dstPath = "";
 			dstSubfolderSpec = 16;
 			files = (
+				452B9ED41693F67E001A6194 /* Samples in CopyFiles */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,6 +86,7 @@
 		450D7D8116765F1700F4F5C2 /* yaml_private.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = yaml_private.h; sourceTree = "<group>"; };
 		450D7DC116765F1800F4F5C2 /* CYAMLDeserializer.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = CYAMLDeserializer.h; sourceTree = "<group>"; };
 		450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = CYAMLDeserializer.m; sourceTree = "<group>"; };
+		452B9ED21693F671001A6194 /* Samples */ = {isa = PBXFileReference; lastKnownFileType = folder; path = Samples; sourceTree = "<group>"; };
 		4584636A16765E8A00B0C5AC /* CocoaYAML */ = {isa = PBXFileReference; explicitFileType = "compiled.mach-o.executable"; includeInIndex = 0; name = CocoaYAML; path = CommandLineTest; sourceTree = BUILT_PRODUCTS_DIR; };
 		4584636E16765E8A00B0C5AC /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = System/Library/Frameworks/Foundation.framework; sourceTree = SDKROOT; };
 		459F671B16852FC2006DD219 /* main.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
@@ -204,6 +208,7 @@
 				450D7D6A16765F1700F4F5C2 /* Externals */,
 				450D7DC016765F1800F4F5C2 /* Source */,
 				45C2ED4F16770248005808D3 /* Unit Tests */,
+				452B9ED21693F671001A6194 /* Samples */,
 				4584636D16765E8A00B0C5AC /* Frameworks */,
 				4584636B16765E8A00B0C5AC /* Products */,
 			);
@@ -400,6 +405,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				45C2ED5416770248005808D3 /* InfoPlist.strings in Resources */,
+				452B9ED31693F672001A6194 /* Samples in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
