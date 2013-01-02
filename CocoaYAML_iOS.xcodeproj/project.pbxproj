@@ -271,7 +271,7 @@
 				LastUpgradeCheck = 0450;
 				ORGANIZATIONNAME = toxicsoftware;
 			};
-			buildConfigurationList = 45F23B4F1676621E00A3A6FC /* Build configuration list for PBXProject "CocoaYAML" */;
+			buildConfigurationList = 45F23B4F1676621E00A3A6FC /* Build configuration list for PBXProject "CocoaYAML_iOS" */;
 			compatibilityVersion = "Xcode 3.2";
 			developmentRegion = English;
 			hasScannedForEncodings = 0;
@@ -479,7 +479,7 @@
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;
 		};
-		45F23B4F1676621E00A3A6FC /* Build configuration list for PBXProject "CocoaYAML" */ = {
+		45F23B4F1676621E00A3A6FC /* Build configuration list for PBXProject "CocoaYAML_iOS" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
 				45F23B611676621E00A3A6FC /* Debug */,
