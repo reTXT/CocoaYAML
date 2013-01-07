@@ -1,10 +1,33 @@
 //
 //  CYAMLDeserializer.m
-//  LayoutTest
+//  TouchCode
 //
-//  Created by Jonathan Wight on 12/8/12.
-//  Copyright (c) 2012 toxicsoftware. All rights reserved.
+//  Created by Jonathan Wight on 5/10/06.
+//  Copyright 2011 toxicsoftware.com. All rights reserved.
 //
+//  Redistribution and use in source and binary forms, with or without modification, are
+//  permitted provided that the following conditions are met:
+//
+//     1. Redistributions of source code must retain the above copyright notice, this list of
+//        conditions and the following disclaimer.
+//
+//     2. Redistributions in binary form must reproduce the above copyright notice, this list
+//        of conditions and the following disclaimer in the documentation and/or other materials
+//        provided with the distribution.
+//
+//  THIS SOFTWARE IS PROVIDED BY JONATHAN WIGHT ``AS IS'' AND ANY EXPRESS OR IMPLIED
+//  WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES OF MERCHANTABILITY AND
+//  FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED. IN NO EVENT SHALL JONATHAN WIGHT OR
+//  CONTRIBUTORS BE LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR
+//  CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR
+//  SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON
+//  ANY THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING
+//  NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF
+//  ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+//
+//  The views and conclusions contained in the software and documentation are those of the
+//  authors and should not be interpreted as representing official policies, either expressed
+//  or implied, of toxicsoftware.com.
 
 #import "CYAMLDeserializer.h"
 
@@ -17,8 +40,8 @@ typedef enum {
 	Mode_Mapping,
 	} EMode;
 
-static id EventLoop(CYAMLDeserializer *inDeserializer, yaml_parser_t *inParser, int depth, EMode mode, id container, NSError **outError);
-static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *inEvent, NSError **outError);
+static id EventLoop(CYAMLDeserializer *inDeserializer, yaml_parser_t *inParser, int depth, EMode mode, id container, NSError *__autoreleasing *outError);
+static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *inEvent, NSError *__autoreleasing *outError);
 
 @interface CYAMLDeserializer()
 @property (readwrite, nonatomic, assign) yaml_parser_t *parser;
@@ -29,6 +52,11 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 #pragma mark -
 
 @implementation CYAMLDeserializer
+
++ (instancetype)deserializer;
+	{
+	return([[self alloc] init]);
+	}
 
 - (id)init
     {
@@ -42,35 +70,35 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
     return self;
     }
 
-- (void)registerHandlerForTag:(NSString *)inTag block:(id (^)(id, NSError **))inBlock
+- (void)registerHandlerForTag:(NSString *)inTag block:(id (^)(id, NSError *__autoreleasing *))inBlock
 	{
 	self.tagHandlers[inTag] = [inBlock copy];
 	}
 
 - (void)registerDefaultHandlers
 	{
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_NULL_TAG] block:^(id inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_NULL_TAG] block:^(id inValue, NSError *__autoreleasing *outError) {
 		return([NSNull null]);
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_BOOL_TAG] block:^(id inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_BOOL_TAG] block:^(id inValue, NSError *__autoreleasing *outError) {
 		return(@([inValue boolValue]));
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_STR_TAG] block:^(id inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_STR_TAG] block:^(id inValue, NSError *__autoreleasing *outError) {
 		return(inValue);
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_INT_TAG] block:^(id inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_INT_TAG] block:^(id inValue, NSError *__autoreleasing *outError) {
 		return(@([inValue integerValue]));
 		}];
-	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_FLOAT_TAG] block:^(id inValue, NSError **outError) {
+	[self registerHandlerForTag:[NSString stringWithUTF8String:YAML_FLOAT_TAG] block:^(id inValue, NSError *__autoreleasing *outError) {
 		return(@([inValue doubleValue]));
 		}];
 
-	[self registerHandlerForTag:@"tag:yaml.org,2002:binary" block:^(id inValue, NSError **outError) {
+	[self registerHandlerForTag:@"tag:yaml.org,2002:binary" block:^(id inValue, NSError *__autoreleasing *outError) {
 		return(inValue);
 		}];
 	}
 
-- (id)deserializeData:(NSData *)inData error:(NSError **)outError
+- (id)deserializeData:(NSData *)inData error:(NSError *__autoreleasing *)outError
 	{
 	self.objectsForAnchors = [NSMutableDictionary dictionary];
 
@@ -79,22 +107,22 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 
 	yaml_parser_set_input_string(_parser, [inData bytes], [inData length]);
 
-	id theRootObject = [self deserialize:outError];
+	NSArray *theDocuments = [self deserialize:outError];
 
 	yaml_parser_delete(_parser);
 	free(_parser);
 
 	if (self.assumeSingleDocument == YES)
 		{
-		return(theRootObject[0]);
+		return(theDocuments.count > 0 ? theDocuments[0] : NULL);
 		}
 	else
 		{
-		return(theRootObject);
+		return(theDocuments);
 		}
 	}
 
-- (id)deserializeString:(NSString *)inString error:(NSError **)outError;
+- (id)deserializeString:(NSString *)inString error:(NSError *__autoreleasing *)outError;
 	{
 	NSData *theData = [inString dataUsingEncoding:NSUTF8StringEncoding];
 	if (theData == NULL)
@@ -104,7 +132,7 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 	return([self deserializeData:theData error:outError]);
 	}
 
-- (id)deserializeURL:(NSURL *)inURL error:(NSError **)outError
+- (id)deserializeURL:(NSURL *)inURL error:(NSError *__autoreleasing *)outError
 	{
 	NSData *theData = [NSData dataWithContentsOfURL:inURL options:0 error:outError];
 	if (theData == NULL)
@@ -112,6 +140,13 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 		return(NULL);
 		}
 	return([self deserializeData:theData error:outError]);
+	}
+
+- (id)deserializeFilename:(NSString *)inName bundle:(NSBundle *)inBundle error:(NSError *__autoreleasing *)outError;
+	{
+	inBundle = inBundle ?: [NSBundle mainBundle];
+	NSURL *theURL = [inBundle URLForResource:inName withExtension:@"yaml"];
+	return([self deserializeURL:theURL error:outError]);
 	}
 
 #pragma mark -
@@ -168,7 +203,7 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 
 @end
 
-static id EventLoop(CYAMLDeserializer *inDeserializer, yaml_parser_t *inParser, int depth, EMode mode, id container, NSError **outError)
+static id EventLoop(CYAMLDeserializer *inDeserializer, yaml_parser_t *inParser, int depth, EMode mode, id container, NSError *__autoreleasing *outError)
 	{
 	id theResult = NULL;
 	id theKey = NULL;
@@ -400,7 +435,7 @@ static id EventLoop(CYAMLDeserializer *inDeserializer, yaml_parser_t *inParser, 
 	return(theResult);
 	}
 
-static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *inEvent, NSError **outError)
+static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *inEvent, NSError *__autoreleasing *outError)
 	{
 	id theValue = NULL;
 	NSString *theString = [[NSString alloc] initWithUTF8String:(const char *)inEvent->data.scalar.value];
@@ -446,7 +481,7 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 
 	if (theTag != NULL)
 		{
-		id (^theHandler)(NSString *, NSError **) = deserializer.tagHandlers[theTag];
+		id (^theHandler)(NSString *, NSError *__autoreleasing *) = deserializer.tagHandlers[theTag];
 		if (theHandler)
 			{
 			theValue = theHandler(theString, outError);
@@ -491,5 +526,3 @@ static id ValueForScalar(CYAMLDeserializer *deserializer, const yaml_event_t *in
 
 	return(theValue);
 	}
-
-
