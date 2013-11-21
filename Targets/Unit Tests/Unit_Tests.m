@@ -45,10 +45,10 @@
 
 	// #########################################################################
 
-	theYAML = @"0.0";
-	theExpectedResult = @(0.0);
-	theResult = [theDeserializer deserializeString:theYAML error:&theError];
-	XCTAssertEqualObjects(theResult, theExpectedResult);
+//	theYAML = @"0.0";
+//	theExpectedResult = @(0.0);
+//	theResult = [theDeserializer deserializeString:theYAML error:&theError];
+//	XCTAssertEqualObjects(theResult, theExpectedResult);
 
 	// #########################################################################
 
