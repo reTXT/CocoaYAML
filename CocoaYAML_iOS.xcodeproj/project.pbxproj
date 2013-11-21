@@ -268,7 +268,7 @@
 		45F23B4C1676621E00A3A6FC /* Project object */ = {
 			isa = PBXProject;
 			attributes = {
-				LastUpgradeCheck = 0450;
+				LastUpgradeCheck = 0510;
 				ORGANIZATIONNAME = toxicsoftware;
 			};
 			buildConfigurationList = 45F23B4F1676621E00A3A6FC /* Build configuration list for PBXProject "CocoaYAML_iOS" */;
@@ -410,7 +410,7 @@
 				GCC_WARN_UNINITIALIZED_AUTOS = YES;
 				GCC_WARN_UNUSED_VARIABLE = YES;
 				IPHONEOS_DEPLOYMENT_TARGET = 6.0;
-				ONLY_ACTIVE_ARCH = NO;
+				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
 			};
 			name = Debug;
