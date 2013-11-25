@@ -455,7 +455,7 @@
 				ORGANIZATIONNAME = toxicsoftware;
 				TargetAttributes = {
 					45C2ED4516770248005808D3 = {
-						TestTargetID = 4584636916765E8A00B0C5AC;
+						TestTargetID = 4584636916765E8A00B0C5AC /* CommandLineTest */;
 					};
 				};
 			};
