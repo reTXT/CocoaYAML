@@ -699,6 +699,7 @@
 		4509280F183E888D00D2D858 /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_MODULES = YES;
 				DSTROOT = /tmp/CocoaYAML.dst;
 				GCC_PRECOMPILE_PREFIX_HEADER = YES;
@@ -722,6 +723,7 @@
 		45092810183E888D00D2D858 /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD_INCLUDING_64_BIT)";
 				CLANG_ENABLE_MODULES = YES;
 				DSTROOT = /tmp/CocoaYAML.dst;
 				ENABLE_NS_ASSERTIONS = NO;
