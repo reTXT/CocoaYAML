@@ -24,9 +24,6 @@
 
 /* Begin PBXBuildFile section */
 		4500CEEC168532EC00E7B6A5 /* InfoPlist.strings in Resources */ = {isa = PBXBuildFile; fileRef = 4500CEE9168532EC00E7B6A5 /* InfoPlist.strings */; };
-		4500CEEE1685331600E7B6A5 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */; };
-		4500CEEF1685331600E7B6A5 /* NSData_Base64Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */; };
-		4500CEF01685331600E7B6A5 /* NSData_DigestExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */; };
 		4500CEF11685331600E7B6A5 /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7816765F1700F4F5C2 /* api.c */; };
 		4500CEF21685331600E7B6A5 /* dumper.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7916765F1700F4F5C2 /* dumper.c */; };
 		4500CEF31685331600E7B6A5 /* emitter.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7A16765F1700F4F5C2 /* emitter.c */; };
@@ -35,14 +32,8 @@
 		4500CEF61685331600E7B6A5 /* reader.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7E16765F1700F4F5C2 /* reader.c */; };
 		4500CEF71685331600E7B6A5 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7F16765F1700F4F5C2 /* scanner.c */; };
 		4500CEF81685331600E7B6A5 /* writer.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D8016765F1700F4F5C2 /* writer.c */; };
-		4500CEF91685331A00E7B6A5 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */; };
-		4500CEFA1685331A00E7B6A5 /* NSData_Base64Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */; };
-		4500CEFB1685331A00E7B6A5 /* NSData_DigestExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */; };
 		45092814183E88D100D2D858 /* CYAMLDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */; };
 		45092815183E88D300D2D858 /* CYAMLDeserializer.m in Sources */ = {isa = PBXBuildFile; fileRef = 450D7DC216765F1800F4F5C2 /* CYAMLDeserializer.m */; };
-		45092816183E890C00D2D858 /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */; };
-		45092817183E890C00D2D858 /* NSData_Base64Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */; };
-		45092818183E890C00D2D858 /* NSData_DigestExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */; };
 		45092819183E891000D2D858 /* api.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7816765F1700F4F5C2 /* api.c */; };
 		4509281A183E891000D2D858 /* dumper.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7916765F1700F4F5C2 /* dumper.c */; };
 		4509281B183E891000D2D858 /* emitter.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7A16765F1700F4F5C2 /* emitter.c */; };
@@ -76,9 +67,6 @@
 		45C2ED6316770324005808D3 /* reader.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7E16765F1700F4F5C2 /* reader.c */; };
 		45C2ED6416770324005808D3 /* scanner.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D7F16765F1700F4F5C2 /* scanner.c */; };
 		45C2ED6516770324005808D3 /* writer.c in Sources */ = {isa = PBXBuildFile; fileRef = 450D7D8016765F1700F4F5C2 /* writer.c */; };
-		45F23C03167691CB00A3A6FC /* Base64Transcoder.c in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */; };
-		45F23C04167691CB00A3A6FC /* NSData_Base64Extensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */; };
-		45F23C05167691CB00A3A6FC /* NSData_DigestExtensions.m in Sources */ = {isa = PBXBuildFile; fileRef = 45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -175,12 +163,6 @@
 		45C2ED5316770248005808D3 /* en */ = {isa = PBXFileReference; lastKnownFileType = text.plist.strings; name = en; path = en.lproj/InfoPlist.strings; sourceTree = "<group>"; };
 		45C2ED5616770248005808D3 /* Unit_Tests.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Unit_Tests.m; sourceTree = "<group>"; };
 		45C2ED5816770248005808D3 /* Unit Tests-Prefix.pch */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Unit Tests-Prefix.pch"; sourceTree = "<group>"; };
-		45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.c; path = Base64Transcoder.c; sourceTree = "<group>"; };
-		45F23BE5167691CB00A3A6FC /* Base64Transcoder.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = Base64Transcoder.h; sourceTree = "<group>"; };
-		45F23BE6167691CB00A3A6FC /* NSData_Base64Extensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSData_Base64Extensions.h; sourceTree = "<group>"; };
-		45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSData_Base64Extensions.m; sourceTree = "<group>"; };
-		45F23BE8167691CB00A3A6FC /* NSData_DigestExtensions.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = NSData_DigestExtensions.h; sourceTree = "<group>"; };
-		45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = NSData_DigestExtensions.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -227,7 +209,6 @@
 		450D7D6A16765F1700F4F5C2 /* Externals */ = {
 			isa = PBXGroup;
 			children = (
-				45F23BE0167691CB00A3A6FC /* SimpleHashAndDigest */,
 				450D7D6B16765F1700F4F5C2 /* libyaml */,
 			);
 			path = Externals;
@@ -336,27 +317,6 @@
 			name = "Supporting Files";
 			sourceTree = "<group>";
 		};
-		45F23BE0167691CB00A3A6FC /* SimpleHashAndDigest */ = {
-			isa = PBXGroup;
-			children = (
-				45F23BE3167691CB00A3A6FC /* Source */,
-			);
-			path = SimpleHashAndDigest;
-			sourceTree = "<group>";
-		};
-		45F23BE3167691CB00A3A6FC /* Source */ = {
-			isa = PBXGroup;
-			children = (
-				45F23BE4167691CB00A3A6FC /* Base64Transcoder.c */,
-				45F23BE5167691CB00A3A6FC /* Base64Transcoder.h */,
-				45F23BE6167691CB00A3A6FC /* NSData_Base64Extensions.h */,
-				45F23BE7167691CB00A3A6FC /* NSData_Base64Extensions.m */,
-				45F23BE8167691CB00A3A6FC /* NSData_DigestExtensions.h */,
-				45F23BE9167691CB00A3A6FC /* NSData_DigestExtensions.m */,
-			);
-			path = Source;
-			sourceTree = "<group>";
-		};
 /* End PBXGroup section */
 
 /* Begin PBXHeadersBuildPhase section */
@@ -455,7 +415,7 @@
 				ORGANIZATIONNAME = toxicsoftware;
 				TargetAttributes = {
 					45C2ED4516770248005808D3 = {
-						TestTargetID = 4584636916765E8A00B0C5AC /* CommandLineTest */;
+						TestTargetID = 4584636916765E8A00B0C5AC;
 					};
 				};
 			};
@@ -521,9 +481,6 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4500CEEE1685331600E7B6A5 /* Base64Transcoder.c in Sources */,
-				4500CEEF1685331600E7B6A5 /* NSData_Base64Extensions.m in Sources */,
-				4500CEF01685331600E7B6A5 /* NSData_DigestExtensions.m in Sources */,
 				45092814183E88D100D2D858 /* CYAMLDeserializer.m in Sources */,
 				4500CEF11685331600E7B6A5 /* api.c in Sources */,
 				4500CEF21685331600E7B6A5 /* dumper.c in Sources */,
@@ -541,17 +498,14 @@
 			buildActionMask = 2147483647;
 			files = (
 				4509281C183E891000D2D858 /* loader.c in Sources */,
-				45092817183E890C00D2D858 /* NSData_Base64Extensions.m in Sources */,
 				45092815183E88D300D2D858 /* CYAMLDeserializer.m in Sources */,
 				4509281F183E891000D2D858 /* scanner.c in Sources */,
 				45092819183E891000D2D858 /* api.c in Sources */,
 				4509281D183E891000D2D858 /* parser.c in Sources */,
-				45092818183E890C00D2D858 /* NSData_DigestExtensions.m in Sources */,
 				4509281A183E891000D2D858 /* dumper.c in Sources */,
 				4509281B183E891000D2D858 /* emitter.c in Sources */,
 				4509281E183E891000D2D858 /* reader.c in Sources */,
 				45092820183E891000D2D858 /* writer.c in Sources */,
-				45092816183E890C00D2D858 /* Base64Transcoder.c in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -568,9 +522,6 @@
 				450D7DC916765F1800F4F5C2 /* scanner.c in Sources */,
 				450D7DCA16765F1800F4F5C2 /* writer.c in Sources */,
 				450D7DD616765F1800F4F5C2 /* CYAMLDeserializer.m in Sources */,
-				45F23C03167691CB00A3A6FC /* Base64Transcoder.c in Sources */,
-				45F23C04167691CB00A3A6FC /* NSData_Base64Extensions.m in Sources */,
-				45F23C05167691CB00A3A6FC /* NSData_DigestExtensions.m in Sources */,
 				459F671C16852FC2006DD219 /* main.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -589,9 +540,6 @@
 				45C2ED6316770324005808D3 /* reader.c in Sources */,
 				45C2ED6416770324005808D3 /* scanner.c in Sources */,
 				45C2ED6516770324005808D3 /* writer.c in Sources */,
-				4500CEF91685331A00E7B6A5 /* Base64Transcoder.c in Sources */,
-				4500CEFA1685331A00E7B6A5 /* NSData_Base64Extensions.m in Sources */,
-				4500CEFB1685331A00E7B6A5 /* NSData_DigestExtensions.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
